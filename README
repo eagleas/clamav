@@ -1,0 +1,24 @@
+= ClamAV/R
+Copyright(c) 2003-2007 MoonWolf <moonwolf@moonwolf.com>
+
+== INSTALL
+
+# ruby setup.rb
+
+== USAGE
+ClamAV.new()
+  return:
+    ClamAV instance
+
+ClamAV#scanfile(filename, options)
+  filename => filename
+  options =>
+    CL_RAW
+    CL_ARCHIVE
+    CL_MAIL
+    
+  return:
+    virusname or ClamAV returncode(Fixnum)
+
+== LICENSE
+GPL
