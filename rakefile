@@ -5,11 +5,11 @@ require 'rake/gempackagetask'
 require 'tools/rakehelp'
 require 'spec/rake/spectask'
 
-GEM_VERSION="0.2.0"
+GEM_VERSION="0.2.1"
 
 setup_extension('clamav', 'clamav')
 
-desc "Compiles native extensions"
+desc "Compile native extension"
 task :compile => [:clamav]
 
 task :default => [:compile, :spec]
@@ -27,11 +27,11 @@ gemspec = Gem::Specification.new do |gemspec|
   gemspec.email =  "eagle.alex@gmail.com"
   gemspec.summary = "ClamAV Ruby binding"
   gemspec.description = <<-EOF
-    ClamAV Ruby binding. Based on staled project clamavr-0.2.0
+    ClamAV Ruby binding. Based on project clamavr-0.2.0
     http://raa.ruby-lang.org/project/clamavr/
     Thanks to MoonWoolf <moonwolf@moonwolf.com>
   EOF
-  gemspec.files = %w( rakefile ChangeLog README) +
+  gemspec.files = %w( rakefile README) +
                   Dir.glob( 'lib/*.rb' ) +
                   Dir.glob( 'spec/*.rb' ) +
                   Dir.glob( 'spec/unit/*.rb' ) +
