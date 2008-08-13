@@ -26,11 +26,11 @@ static VALUE clamavr_s_allocate(VALUE klass) {
     }
     cl_build(ptr->root);
     
+    ptr->limits.maxscansize = 10 * 1024 * 1024;
+    ptr->limits.maxfilesize = 10 * 1024 * 1024;
     ptr->limits.maxreclevel = 100;
     ptr->limits.maxfiles    = 1024;
-    ptr->limits.maxmailrec  = 5;
     ptr->limits.archivememlim = 1;
-    ptr->limits.maxfilesize = 10 * 1024 * 1024;
 
     return Data_Wrap_Struct(klass, 0, clamavr_free, ptr);
 }
@@ -71,43 +71,52 @@ void Init_clamav() {
     rb_define_method(cClamAV, "scanfile", clamavr_scanfile, 2);
     rb_define_method(cClamAV, "signo", clamavr_signo, 0);
 
-    rb_define_const(cClamAV, "CL_VIRUS", INT2FIX(CL_VIRUS));
+    /* return codes */
+    rb_define_const(cClamAV, "CL_CLEAN", INT2FIX(CL_CLEAN));         /*  no virus found  */
+    rb_define_const(cClamAV, "CL_VIRUS", INT2FIX(CL_VIRUS));         /*  virus(es) found  */
     rb_define_const(cClamAV, "CL_SUCCESS", INT2FIX(CL_SUCCESS));
     rb_define_const(cClamAV, "CL_BREAK", INT2FIX(CL_BREAK));
-    rb_define_const(cClamAV, "CL_EMAXREC", INT2FIX(CL_EMAXREC));
-    rb_define_const(cClamAV, "CL_EMAXSIZE", INT2FIX(CL_EMAXSIZE));
-    rb_define_const(cClamAV, "CL_EMAXFILES", INT2FIX(CL_EMAXFILES));
-    rb_define_const(cClamAV, "CL_ERAR", INT2FIX(CL_ERAR));
-    rb_define_const(cClamAV, "CL_EZIP", INT2FIX(CL_EZIP));
-    rb_define_const(cClamAV, "CL_EGZIP", INT2FIX(CL_EGZIP));
-    rb_define_const(cClamAV, "CL_EBZIP", INT2FIX(CL_EBZIP));
-    rb_define_const(cClamAV, "CL_EOLE2", INT2FIX(CL_EOLE2));
-    rb_define_const(cClamAV, "CL_EMSCOMP", INT2FIX(CL_EMSCOMP));
-    rb_define_const(cClamAV, "CL_EMSCAB", INT2FIX(CL_EMSCAB));
-    rb_define_const(cClamAV, "CL_EACCES", INT2FIX(CL_EACCES));
-    rb_define_const(cClamAV, "CL_ENULLARG", INT2FIX(CL_ENULLARG));
-    rb_define_const(cClamAV, "CL_ETMPFILE", INT2FIX(CL_ETMPFILE));
-    rb_define_const(cClamAV, "CL_EFSYNC", INT2FIX(CL_EFSYNC));
-    rb_define_const(cClamAV, "CL_EMEM", INT2FIX(CL_EMEM));
-    rb_define_const(cClamAV, "CL_EOPEN", INT2FIX(CL_EOPEN));
-    rb_define_const(cClamAV, "CL_EMALFDB", INT2FIX(CL_EMALFDB));
-    rb_define_const(cClamAV, "CL_EPATSHORT", INT2FIX(CL_EPATSHORT));
-    rb_define_const(cClamAV, "CL_ETMPDIR", INT2FIX(CL_ETMPDIR));
-    rb_define_const(cClamAV, "CL_ECVD", INT2FIX(CL_ECVD));
-    rb_define_const(cClamAV, "CL_ECVDEXTR", INT2FIX(CL_ECVDEXTR));
-    rb_define_const(cClamAV, "CL_EMD5", INT2FIX(CL_EMD5));
-    rb_define_const(cClamAV, "CL_EDSIG", INT2FIX(CL_EDSIG));
-    rb_define_const(cClamAV, "CL_EIO", INT2FIX(CL_EIO));
-    rb_define_const(cClamAV, "CL_EFORMAT", INT2FIX(CL_EFORMAT));
-    rb_define_const(cClamAV, "CL_ESUPPORT", INT2FIX(CL_ESUPPORT));
-    rb_define_const(cClamAV, "CL_ELOCKDB", INT2FIX(CL_ELOCKDB));
-/*    rb_define_const(cClamAV, "CL_ENCINIT", INT2FIX(CL_ENCINIT));
-    rb_define_const(cClamAV, "CL_ENCIO", INT2FIX(CL_ENCIO));
-    rb_define_const(cClamAV, "CL_DB_NCORE", INT2FIX(CL_DB_NCORE)); */
+
+    rb_define_const(cClamAV, "CL_EMAXREC", INT2FIX(CL_EMAXREC));     /*  recursion limit exceeded  */
+    rb_define_const(cClamAV, "CL_EMAXSIZE", INT2FIX(CL_EMAXSIZE));   /*  size limit exceeded  */
+    rb_define_const(cClamAV, "CL_EMAXFILES", INT2FIX(CL_EMAXFILES)); /*  files limit exceeded  */
+    rb_define_const(cClamAV, "CL_ERAR", INT2FIX(CL_ERAR));           /*  rar handler error  */
+    rb_define_const(cClamAV, "CL_EZIP", INT2FIX(CL_EZIP));           /*  zip handler error  */
+    rb_define_const(cClamAV, "CL_EGZIP", INT2FIX(CL_EGZIP));         /*  gzip handler error  */
+    rb_define_const(cClamAV, "CL_EBZIP", INT2FIX(CL_EBZIP));         /*  bzip2 handler error  */
+    rb_define_const(cClamAV, "CL_EOLE2", INT2FIX(CL_EOLE2));         /*  OLE2 handler error  */
+    rb_define_const(cClamAV, "CL_EMSCOMP", INT2FIX(CL_EMSCOMP));     /*  MS Expand handler error  */
+    rb_define_const(cClamAV, "CL_EMSCAB", INT2FIX(CL_EMSCAB));       /*  MS CAB module error  */
+    rb_define_const(cClamAV, "CL_EACCES", INT2FIX(CL_EACCES));       /*  access denied  */
+    rb_define_const(cClamAV, "CL_ENULLARG", INT2FIX(CL_ENULLARG));   /*  null argument  */
+    rb_define_const(cClamAV, "CL_ETMPFILE", INT2FIX(CL_ETMPFILE));   /*  tmpfile() failed  */
+    rb_define_const(cClamAV, "CL_EFSYNC", INT2FIX(CL_EFSYNC));       /*  fsync() failed  */
+    rb_define_const(cClamAV, "CL_EMEM", INT2FIX(CL_EMEM));           /*  memory allocation error  */
+    rb_define_const(cClamAV, "CL_EOPEN", INT2FIX(CL_EOPEN));         /*  file open error  */
+    rb_define_const(cClamAV, "CL_EMALFDB", INT2FIX(CL_EMALFDB));     /*  malformed database  */
+    rb_define_const(cClamAV, "CL_EPATSHORT", INT2FIX(CL_EPATSHORT)); /*  pattern too short  */
+    rb_define_const(cClamAV, "CL_ETMPDIR", INT2FIX(CL_ETMPDIR));     /*  mkdir() failed  */
+    rb_define_const(cClamAV, "CL_ECVD", INT2FIX(CL_ECVD));           /*  not a CVD file (or broken)  */
+    rb_define_const(cClamAV, "CL_ECVDEXTR", INT2FIX(CL_ECVDEXTR));   /*  CVD extraction failure  */
+    rb_define_const(cClamAV, "CL_EMD5", INT2FIX(CL_EMD5));           /*  MD5 verification error  */
+    rb_define_const(cClamAV, "CL_EDSIG", INT2FIX(CL_EDSIG));         /*  digital signature verification error  */
+    rb_define_const(cClamAV, "CL_EIO", INT2FIX(CL_EIO));             /*  general I/O error  */
+    rb_define_const(cClamAV, "CL_EFORMAT", INT2FIX(CL_EFORMAT));     /*  bad format or broken file  */
+    rb_define_const(cClamAV, "CL_ESUPPORT", INT2FIX(CL_ESUPPORT));   /*  not supported data format  */
+    rb_define_const(cClamAV, "CL_ELOCKDB", INT2FIX(CL_ELOCKDB));     /*  can't lock DB directory  */
+    rb_define_const(cClamAV, "CL_EARJ", INT2FIX(CL_EARJ));           /*  ARJ handler error  */
+
+    /* db options */
     rb_define_const(cClamAV, "CL_DB_PHISHING", INT2FIX(CL_DB_PHISHING));
-    rb_define_const(cClamAV, "CL_DB_ACONLY", INT2FIX(CL_DB_ACONLY));
+    rb_define_const(cClamAV, "CL_DB_ACONLY", INT2FIX(CL_DB_ACONLY)); /*  WARNING: only for developers  */
     rb_define_const(cClamAV, "CL_DB_PHISHING_URLS", INT2FIX(CL_DB_PHISHING_URLS));
+    rb_define_const(cClamAV, "CL_DB_PUA", INT2FIX(CL_DB_PUA));
+    rb_define_const(cClamAV, "CL_DB_CVDNOTMP", INT2FIX(CL_DB_CVDNOTMP));
+
+    /* recommended db settings */
     rb_define_const(cClamAV, "CL_DB_STDOPT", INT2FIX(CL_DB_STDOPT));
+
+    /* scan options */
     rb_define_const(cClamAV, "CL_SCAN_RAW", INT2FIX(CL_SCAN_RAW));
     rb_define_const(cClamAV, "CL_SCAN_ARCHIVE", INT2FIX(CL_SCAN_ARCHIVE));
     rb_define_const(cClamAV, "CL_SCAN_MAIL", INT2FIX(CL_SCAN_MAIL));
@@ -117,17 +126,14 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_SCAN_PE", INT2FIX(CL_SCAN_PE));
     rb_define_const(cClamAV, "CL_SCAN_BLOCKBROKEN", INT2FIX(CL_SCAN_BLOCKBROKEN));
     rb_define_const(cClamAV, "CL_SCAN_MAILURL", INT2FIX(CL_SCAN_MAILURL));
-    rb_define_const(cClamAV, "CL_SCAN_BLOCKMAX", INT2FIX(CL_SCAN_BLOCKMAX));
+    rb_define_const(cClamAV, "CL_SCAN_BLOCKMAX", INT2FIX(CL_SCAN_BLOCKMAX)); /*  ignored  */
     rb_define_const(cClamAV, "CL_SCAN_ALGORITHMIC", INT2FIX(CL_SCAN_ALGORITHMIC));
-    rb_define_const(cClamAV, "CL_SCAN_PHISHING_DOMAINLIST", INT2FIX(CL_SCAN_PHISHING_DOMAINLIST));
-    rb_define_const(cClamAV, "CL_SCAN_PHISHING_BLOCKSSL", INT2FIX(CL_SCAN_PHISHING_BLOCKSSL));
+    rb_define_const(cClamAV, "CL_SCAN_PHISHING_BLOCKSSL", INT2FIX(CL_SCAN_PHISHING_BLOCKSSL)); /*  ssl mismatches, not ssl by itself */
     rb_define_const(cClamAV, "CL_SCAN_PHISHING_BLOCKCLOAK", INT2FIX(CL_SCAN_PHISHING_BLOCKCLOAK));
     rb_define_const(cClamAV, "CL_SCAN_ELF", INT2FIX(CL_SCAN_ELF));
     rb_define_const(cClamAV, "CL_SCAN_PDF", INT2FIX(CL_SCAN_PDF));
+
+    /* recommended scan settings */
     rb_define_const(cClamAV, "CL_SCAN_STDOPT", INT2FIX(CL_SCAN_STDOPT));
-    rb_define_const(cClamAV, "CL_RAW", INT2FIX(CL_RAW));
-    rb_define_const(cClamAV, "CL_ARCHIVE", INT2FIX(CL_ARCHIVE));
-    rb_define_const(cClamAV, "CL_MAIL", INT2FIX(CL_MAIL));
-    rb_define_const(cClamAV, "CL_OLE2", INT2FIX(CL_OLE2));
-    rb_define_const(cClamAV, "CL_ENCRYPTED", INT2FIX(CL_ENCRYPTED));
+
 }
