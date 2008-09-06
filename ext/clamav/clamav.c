@@ -77,9 +77,9 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_SUCCESS", INT2FIX(CL_SUCCESS));
     rb_define_const(cClamAV, "CL_BREAK", INT2FIX(CL_BREAK));
 
-    rb_define_const(cClamAV, "CL_EMAXREC", INT2FIX(CL_EMAXREC));     /*  recursion limit exceeded  */
-    rb_define_const(cClamAV, "CL_EMAXSIZE", INT2FIX(CL_EMAXSIZE));   /*  size limit exceeded  */
-    rb_define_const(cClamAV, "CL_EMAXFILES", INT2FIX(CL_EMAXFILES)); /*  files limit exceeded  */
+    rb_define_const(cClamAV, "CL_EMAXREC", INT2FIX(CL_EMAXREC));     /*  (internal) recursion limit exceeded  */
+    rb_define_const(cClamAV, "CL_EMAXSIZE", INT2FIX(CL_EMAXSIZE));   /*  (internal) size limit exceeded  */
+    rb_define_const(cClamAV, "CL_EMAXFILES", INT2FIX(CL_EMAXFILES)); /*  (internal) files limit exceeded  */
     rb_define_const(cClamAV, "CL_ERAR", INT2FIX(CL_ERAR));           /*  rar handler error  */
     rb_define_const(cClamAV, "CL_EZIP", INT2FIX(CL_EZIP));           /*  zip handler error  */
     rb_define_const(cClamAV, "CL_EGZIP", INT2FIX(CL_EGZIP));         /*  gzip handler error  */
@@ -90,7 +90,6 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_EACCES", INT2FIX(CL_EACCES));       /*  access denied  */
     rb_define_const(cClamAV, "CL_ENULLARG", INT2FIX(CL_ENULLARG));   /*  null argument  */
     rb_define_const(cClamAV, "CL_ETMPFILE", INT2FIX(CL_ETMPFILE));   /*  tmpfile() failed  */
-    rb_define_const(cClamAV, "CL_EFSYNC", INT2FIX(CL_EFSYNC));       /*  fsync() failed  */
     rb_define_const(cClamAV, "CL_EMEM", INT2FIX(CL_EMEM));           /*  memory allocation error  */
     rb_define_const(cClamAV, "CL_EOPEN", INT2FIX(CL_EOPEN));         /*  file open error  */
     rb_define_const(cClamAV, "CL_EMALFDB", INT2FIX(CL_EMALFDB));     /*  malformed database  */
@@ -101,9 +100,8 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_EMD5", INT2FIX(CL_EMD5));           /*  MD5 verification error  */
     rb_define_const(cClamAV, "CL_EDSIG", INT2FIX(CL_EDSIG));         /*  digital signature verification error  */
     rb_define_const(cClamAV, "CL_EIO", INT2FIX(CL_EIO));             /*  general I/O error  */
-    rb_define_const(cClamAV, "CL_EFORMAT", INT2FIX(CL_EFORMAT));     /*  bad format or broken file  */
+    rb_define_const(cClamAV, "CL_EFORMAT", INT2FIX(CL_EFORMAT));     /*  (internal) bad format or broken file  */
     rb_define_const(cClamAV, "CL_ESUPPORT", INT2FIX(CL_ESUPPORT));   /*  not supported data format  */
-    rb_define_const(cClamAV, "CL_ELOCKDB", INT2FIX(CL_ELOCKDB));     /*  can't lock DB directory  */
     rb_define_const(cClamAV, "CL_EARJ", INT2FIX(CL_EARJ));           /*  ARJ handler error  */
 
     /* db options */
@@ -112,6 +110,10 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_DB_PHISHING_URLS", INT2FIX(CL_DB_PHISHING_URLS));
     rb_define_const(cClamAV, "CL_DB_PUA", INT2FIX(CL_DB_PUA));
     rb_define_const(cClamAV, "CL_DB_CVDNOTMP", INT2FIX(CL_DB_CVDNOTMP));
+    rb_define_const(cClamAV, "CL_DB_OFFICIAL", INT2FIX(CL_DB_OFFICIAL));
+    rb_define_const(cClamAV, "CL_DB_PUA_MODE", INT2FIX(CL_DB_PUA_MODE));
+    rb_define_const(cClamAV, "CL_DB_PUA_INCLUDE", INT2FIX(CL_DB_PUA_INCLUDE));
+    rb_define_const(cClamAV, "CL_DB_PUA_EXCLUDE", INT2FIX(CL_DB_PUA_EXCLUDE));
 
     /* recommended db settings */
     rb_define_const(cClamAV, "CL_DB_STDOPT", INT2FIX(CL_DB_STDOPT));
@@ -132,6 +134,11 @@ void Init_clamav() {
     rb_define_const(cClamAV, "CL_SCAN_PHISHING_BLOCKCLOAK", INT2FIX(CL_SCAN_PHISHING_BLOCKCLOAK));
     rb_define_const(cClamAV, "CL_SCAN_ELF", INT2FIX(CL_SCAN_ELF));
     rb_define_const(cClamAV, "CL_SCAN_PDF", INT2FIX(CL_SCAN_PDF));
+    rb_define_const(cClamAV, "CL_SCAN_STRUCTURED", INT2FIX(CL_SCAN_STRUCTURED));
+    rb_define_const(cClamAV, "CL_SCAN_STRUCTURED_SSN_NORMAL", INT2FIX(CL_SCAN_STRUCTURED_SSN_NORMAL));
+    rb_define_const(cClamAV, "CL_SCAN_STRUCTURED_SSN_STRIPPED", INT2FIX(CL_SCAN_STRUCTURED_SSN_STRIPPED));
+    rb_define_const(cClamAV, "CL_SCAN_PARTIAL_MESSAGE", INT2FIX(CL_SCAN_PARTIAL_MESSAGE));
+    rb_define_const(cClamAV, "CL_SCAN_HEURISTIC_PRECEDENCE", INT2FIX(CL_SCAN_HEURISTIC_PRECEDENCE));
 
     /* recommended scan settings */
     rb_define_const(cClamAV, "CL_SCAN_STDOPT", INT2FIX(CL_SCAN_STDOPT));

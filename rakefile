@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 require 'tools/rakehelp'
 require 'spec/rake/spectask'
 
-GEM_VERSION="0.2.1"
+GEM_VERSION="0.2.2"
 
 setup_extension('clamav', 'clamav')
 
@@ -31,7 +31,7 @@ gemspec = Gem::Specification.new do |gemspec|
     http://raa.ruby-lang.org/project/clamavr/
     Thanks to MoonWoolf <moonwolf@moonwolf.com>
   EOF
-  gemspec.files = %w( rakefile README) +
+  gemspec.files = %w( rakefile README ChangeLog ) +
                   Dir.glob( 'lib/*.rb' ) +
                   Dir.glob( 'spec/*.rb' ) +
                   Dir.glob( 'spec/unit/*.rb' ) +

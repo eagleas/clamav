@@ -4,12 +4,14 @@ Thanks to MoonWoolf <moonwolf@moonwolf.com>
 
 == INSTALL
 
-# gem install clamav
+$ sudo gem install clamav
+or
+$ rake package && cd pkg && sudo gem install *.gem
 
 == REQUIREMENTS
 
-clamav >= 0.93
-libclamav, libclamav-dev
+clamav >= 0.94
+libclamav5, libclamav-dev
 
 == USAGE
 ClamAV.new()

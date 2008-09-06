@@ -24,7 +24,8 @@ class ClamAV
       'clam-v3.rar'   => 'ClamAV-Test-File',
       'clam-p.rar'    => 'Encrypted.RAR',  # encripted RAR
       # Bug in ClamAV https://wwws.clamav.net/bugzilla/show_bug.cgi?id=1134
-      # 'clam-ph.rar'    => 'Encrypted.RAR', # encripted RAR with encrypted both file data and headers
+      # Fixed in 0.94
+      'clam-ph.rar'    => 'Encrypted.RAR', # encripted RAR with encrypted both file data and headers
       'program.doc'   => 'W97M.Class.EB',
       'Программа.doc' => 'W97M.Class.EB', # filename in UTF-8
     }
