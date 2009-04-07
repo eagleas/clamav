@@ -72,6 +72,20 @@ class ClamAV
 
     end
 
+    describe "with custom db options" do
+
+      before(:all) do
+        @clam = ClamAV.new(CL_SCAN_STDOPT, CL_DB_STDOPT | CL_DB_PUA)
+      end
+
+      it "should detect PUA" do
+        @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/",
+          'jquery.tooltip.pack.js')).should == 'PUA.Script.Packed-2'
+      end
+
+    end
+
+
     describe "limits" do
       before(:each) do
         @clam = ClamAV.new

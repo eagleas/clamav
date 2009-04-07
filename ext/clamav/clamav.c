@@ -6,6 +6,7 @@ static VALUE cClamAV;
 struct ClamAV_R {
     struct cl_engine *root;
     int options;
+    int db_options;
     struct cl_stat dbstat;
     unsigned int signo;
 };
@@ -26,10 +27,15 @@ static VALUE clamavr_new(argc, argv, klass)
 {
     const char *v_fname;
     int v_options;
-    rb_scan_args(argc, argv, "01", &v_options);
+    int v_db_options;
+    rb_scan_args(argc, argv, "02", &v_options, &v_db_options);
     if(NIL_P(v_options)){
       v_options = INT2FIX(CL_SCAN_STDOPT); /* default value */
     }
+    if(NIL_P(v_db_options)){
+      v_db_options = INT2FIX(CL_DB_STDOPT); /* default value */
+    }
+
     int ret;
     ret = cl_init(FIX2INT(v_options));
     if(ret != CL_SUCCESS) {
@@ -43,13 +49,14 @@ static VALUE clamavr_new(argc, argv, klass)
 
     /* save options */
     ptr->options = v_options;
+    ptr->db_options = v_db_options;
 
     ptr->signo = 0;
 
     const char *dbdir;
     dbdir = cl_retdbdir();
 
-    ret = cl_load(dbdir, ptr->root, &ptr->signo, CL_DB_STDOPT);
+    ret = cl_load(dbdir, ptr->root, &ptr->signo, FIX2INT(v_db_options));
     if(ret != CL_SUCCESS) {
         rb_raise(rb_eRuntimeError, "cl_load() error: %s\n", cl_strerror(ret));
     }
@@ -174,7 +181,7 @@ static VALUE clamavr_dbreload(VALUE self) {
         const char *dbdir;
         dbdir = cl_retdbdir();
         int ret;
-        ret = cl_load(dbdir, ptr->root, &ptr->signo, CL_DB_STDOPT);
+        ret = cl_load(dbdir, ptr->root, &ptr->signo, FIX2INT(ptr->db_options));
         if(ret != CL_SUCCESS) {
             rb_raise(rb_eRuntimeError, "cl_load() error: %s\n", cl_strerror(ret));
         }
