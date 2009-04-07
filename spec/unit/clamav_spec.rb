@@ -48,6 +48,10 @@ class ClamAV
         end
       end
 
+      it "should return signatures count" do
+        @clam.signo.should >= 538736 # on 7/04/09
+      end
+
       it "should not reload db when fresh" do
         @clam.reload.should == 0
       end
