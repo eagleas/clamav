@@ -1,0 +1,109 @@
+= ClamAV
+
+ClamAV Ruby binding gem.
+
+== INSTALL:
+
+$ sudo gem install clamav
+
+== REQUIREMENTS:
+
+clamav >= 0.95
+libclamav6, libclamav-dev
+
+== SYNOPSIS:
+
+=ClamAV.new([options[, db_options]])
+
+  return:
+    ClamAV instance
+
+Options:
+
+* CL_SCAN_STDOPT (default) equal CL_SCAN_ARCHIVE | CL_SCAN_MAIL | CL_SCAN_OLE2 | CL_SCAN_PDF | CL_SCAN_HTML | CL_SCAN_PE | CL_SCAN_ALGORITHMIC | CL_SCAN_ELF
+* CL_SCAN_RAW
+* CL_SCAN_BLOCKENCRYPTED
+* CL_SCAN_BLOCKBROKEN
+* CL_SCAN_MAILURL
+* CL_SCAN_PHISHING_BLOCKSSL
+* CL_SCAN_PHISHING_BLOCKCLOAK
+* CL_SCAN_STRUCTURED
+* CL_SCAN_STRUCTURED_SSN_NORMAL
+* CL_SCAN_STRUCTURED_SSN_STRIPPED
+* CL_SCAN_PARTIAL_MESSAGE
+* CL_SCAN_HEURISTIC_PRECEDENCE
+
+DB options:
+
+* CL_DB_STDOPT (default) equal CL_DB_PHISHING | CL_DB_PHISHING_URLS
+* CL_DB_PUA
+* CL_DB_CVDNOTMP
+* CL_DB_PUA_MODE
+* CL_DB_PUA_INCLUDE
+* CL_DB_PUA_EXCLUDE
+
+See ClamAV documentation and sources for details.
+
+
+
+ClamAV#scanfile(filename[, options])
+  options default CL_SCAN_STDOPT
+    
+  return:
+    virusname or ClamAV returncode(Fixnum)
+
+
+
+ClamAV#reload()
+  reload virus db if changed
+
+  return:
+    1 - reload successful
+    0 - reload unnecessary
+
+
+
+ClamAV#setlimit(param, value)
+ClamAV#getlimit(param)
+ClamAV#setstring(param, value)
+ClamAV#getstring(param)
+  get or set default values internal settings.
+
+Params:
+
+* CL_ENGINE_MAX_SCANSIZE,         /* integer */
+* CL_ENGINE_MAX_FILESIZE,         /* integer */
+* CL_ENGINE_MAX_RECURSION,        /* integer */
+* CL_ENGINE_MAX_FILES,            /* integer */
+* CL_ENGINE_MIN_CC_COUNT,         /* integer */
+* CL_ENGINE_MIN_SSN_COUNT,        /* integer */
+* CL_ENGINE_PUA_CATEGORIES,       /* string */
+* CL_ENGINE_DB_OPTIONS,           /* integer */
+* CL_ENGINE_DB_VERSION,           /* integer */
+* CL_ENGINE_DB_TIME,              /* integer unixtime (readonly) */
+* CL_ENGINE_AC_ONLY,              /* integer */
+* CL_ENGINE_AC_MINDEPTH,          /* integer */
+* CL_ENGINE_AC_MAXDEPTH,          /* integer */
+* CL_ENGINE_TMPDIR,               /* string */
+* CL_ENGINE_KEEPTMP               /* integer */
+
+See ClamAV documentation and sources for details.
+
+
+
+ClamaAV#signo()
+  get loaded signatures count
+
+
+
+== LICENSE:
+GNU General Public License
+Copyright(c) 2008-2009 Alexander Oryol <eagle.alex@gmail.com>
+
+
+
+== THANKS:
+
+Based on project clamavr-0.2.0
+http://raa.ruby-lang.org/project/clamavr/
+Copyright(c) 2003-2007 MoonWolf <moonwolf@moonwolf.com>
