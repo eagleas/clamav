@@ -60,6 +60,67 @@ static VALUE clamavr_initialize(VALUE self) {
     return self;
 }
 
+static VALUE clamavr_setlimit(VALUE self, VALUE v_limit, VALUE v_value) {
+    Check_Type(v_limit, T_FIXNUM);
+    Check_Type(v_value, T_FIXNUM);
+
+    struct ClamAV_R *ptr;
+    Data_Get_Struct(self, struct ClamAV_R, ptr);
+
+    int ret;
+    ret = cl_engine_set_num(ptr->root, FIX2INT(v_limit), FIX2INT(v_value));
+    if(ret != CL_SUCCESS) {
+        rb_raise(rb_eRuntimeError, "cl_engine_set_num() error: %s\n", cl_strerror(ret));
+    }
+    return INT2FIX(ret);
+}
+
+static VALUE clamavr_getlimit(VALUE self, VALUE v_limit) {
+    Check_Type(v_limit, T_FIXNUM);
+
+    struct ClamAV_R *ptr;
+    Data_Get_Struct(self, struct ClamAV_R, ptr);
+
+    int ret;
+    int err;
+    ret = cl_engine_get_num(ptr->root, FIX2INT(v_limit), &err);
+    if(err != CL_SUCCESS) {
+        rb_raise(rb_eRuntimeError, "cl_engine_get_num() error: %s\n", cl_strerror(err));
+    }
+    return INT2NUM(ret);
+}
+
+static VALUE clamavr_setstring(VALUE self, VALUE v_param, VALUE v_value) {
+    Check_Type(v_param, T_FIXNUM);
+    Check_Type(v_value, T_STRING);
+
+    struct ClamAV_R *ptr;
+    Data_Get_Struct(self, struct ClamAV_R, ptr);
+
+    int ret;
+    ret = cl_engine_set_str(ptr->root, FIX2INT(v_param), RSTRING(v_value)->ptr);
+    if(ret != CL_SUCCESS) {
+        rb_raise(rb_eRuntimeError, "cl_engine_set_str() error: %s\n", cl_strerror(ret));
+    }
+    return INT2FIX(ret);
+}
+
+static VALUE clamavr_getstring(VALUE self, VALUE v_param) {
+    Check_Type(v_param, T_FIXNUM);
+    struct ClamAV_R *ptr;
+    Data_Get_Struct(self, struct ClamAV_R, ptr);
+    const char *result;
+    int err;
+    result = cl_engine_get_str(ptr->root, FIX2INT(v_param), &err);
+    if(err != CL_SUCCESS) {
+        rb_raise(rb_eRuntimeError, "cl_engine_get_str() error: %s\n", cl_strerror(err));
+    }
+    if(result == NULL){
+      return Qnil;
+    }
+    return rb_str_new2(result);
+}
+
 static VALUE clamavr_signo(VALUE self) {
     struct ClamAV_R *ptr;
     Data_Get_Struct(self, struct ClamAV_R, ptr);
@@ -101,6 +162,10 @@ void Init_clamav() {
     rb_define_method(cClamAV, "initialize", clamavr_initialize, 0);
     rb_define_method(cClamAV, "scanfile", clamavr_scanfile, -1);
     rb_define_method(cClamAV, "signo", clamavr_signo, 0);
+    rb_define_method(cClamAV, "setlimit", clamavr_setlimit, 2);
+    rb_define_method(cClamAV, "getlimit", clamavr_getlimit, 1);
+    rb_define_method(cClamAV, "setstring", clamavr_setstring, 2);
+    rb_define_method(cClamAV, "getstring", clamavr_getstring, 1);
 
 #include <const.h>
 }

@@ -26,8 +26,8 @@ class ClamAV
     }
 
     describe "with default options" do
-      before(:each) do
-        @clam ||= ClamAV.new
+      before(:all) do
+        @clam = ClamAV.new
       end
 
       it "should be instance of Clamav" do
@@ -51,8 +51,8 @@ class ClamAV
 
     describe "with custom options" do
 
-      before(:each) do
-        @clam ||= ClamAV.new(CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED)
+      before(:all) do
+        @clam = ClamAV.new(CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED)
       end
 
       it "should scan encrypted file with detect" do
@@ -63,6 +63,40 @@ class ClamAV
       it "should scan OLE2 file with not detect" do
         @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", 'program.doc'),
           CL_SCAN_RAW).should == CL_CLEAN
+      end
+
+    end
+
+    describe "limits" do
+      before(:each) do
+        @clam = ClamAV.new
+      end
+
+      it "should set limit" do
+        @clam.setlimit(CL_ENGINE_MAX_FILES, 1).should == CL_SUCCESS
+      end
+
+      it "should do not check archive with two files" do
+        @clam.setlimit(CL_ENGINE_MAX_FILES, 1)
+        @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", 'multi.zip')).
+          should == CL_CLEAN
+      end
+
+      it "should get limit" do
+        @clam.getlimit(CL_ENGINE_MAX_FILES).should == 10000
+      end
+
+      it "should get db time" do
+        Time.at(@clam.getlimit(CL_ENGINE_DB_TIME)).should >= Time.now - 60*60*24 # 1 day
+      end
+
+      it "should get tmpdir == nil" do
+        @clam.getstring(CL_ENGINE_TMPDIR).should be_nil
+      end
+
+      it "should set tmpdir" do
+        @clam.setstring(CL_ENGINE_TMPDIR, '/tmp').should == CL_SUCCESS
+        @clam.getstring(CL_ENGINE_TMPDIR).should == '/tmp'
       end
 
     end
