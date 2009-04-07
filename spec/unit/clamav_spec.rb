@@ -47,6 +47,11 @@ class ClamAV
             CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED).should == result
         end
       end
+
+      it "should not reload db when fresh" do
+        @clam.reload.should == 0
+      end
+
     end
 
     describe "with custom options" do

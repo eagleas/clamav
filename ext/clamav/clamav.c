@@ -6,6 +6,7 @@ static VALUE cClamAV;
 struct ClamAV_R {
     struct cl_engine *root;
     int options;
+    struct cl_stat dbstat;
     unsigned int signo;
 };
 
@@ -45,10 +46,17 @@ static VALUE clamavr_new(argc, argv, klass)
 
     ptr->signo = 0;
 
-    ret = cl_load(cl_retdbdir(), ptr->root, &ptr->signo, CL_DB_STDOPT);
+    const char *dbdir;
+    dbdir = cl_retdbdir();
+
+    ret = cl_load(dbdir, ptr->root, &ptr->signo, CL_DB_STDOPT);
     if(ret != CL_SUCCESS) {
-        rb_raise(rb_eRuntimeError, "cl_loaddbdir() error: %s\n", cl_strerror(ret));
+        rb_raise(rb_eRuntimeError, "cl_load() error: %s\n", cl_strerror(ret));
     }
+
+    memset(&ptr->dbstat, 0, sizeof(struct cl_stat));
+    cl_statinidir(dbdir, &ptr->dbstat);
+
     ret = cl_engine_compile(ptr->root);
     if(ret != CL_SUCCESS) {
         rb_raise(rb_eRuntimeError, "cl_engine_compile() error: %s\n", cl_strerror(ret));
@@ -156,6 +164,26 @@ static VALUE clamavr_scanfile(argc, argv, klass)
     }
 }
 
+static VALUE clamavr_dbreload(VALUE self) {
+    struct ClamAV_R *ptr;
+    Data_Get_Struct(self, struct ClamAV_R, ptr);
+
+    int state;
+    state = cl_statchkdir(&ptr->dbstat);
+    if(state == 1) {
+        const char *dbdir;
+        dbdir = cl_retdbdir();
+        int ret;
+        ret = cl_load(dbdir, ptr->root, &ptr->signo, CL_DB_STDOPT);
+        if(ret != CL_SUCCESS) {
+            rb_raise(rb_eRuntimeError, "cl_load() error: %s\n", cl_strerror(ret));
+        }
+        cl_statfree(&ptr->dbstat);
+        cl_statinidir(dbdir, &ptr->dbstat);
+	  }
+    return INT2FIX(state);
+}
+
 void Init_clamav() {
     cClamAV =  rb_define_class("ClamAV", rb_cObject);
     rb_define_singleton_method(cClamAV, "new", clamavr_new, -1);
@@ -166,6 +194,7 @@ void Init_clamav() {
     rb_define_method(cClamAV, "getlimit", clamavr_getlimit, 1);
     rb_define_method(cClamAV, "setstring", clamavr_setstring, 2);
     rb_define_method(cClamAV, "getstring", clamavr_getstring, 1);
+    rb_define_method(cClamAV, "reload", clamavr_dbreload, 0);
 
 #include <const.h>
 }
