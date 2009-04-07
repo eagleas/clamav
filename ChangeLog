@@ -1,6 +1,16 @@
 ChangeLog
 
-Sar Sep 06 15:43:00 MSK 2008
+Tue Apr 07 20:57:00 MSK 2009
+----------------------------
+  V 0.3.0
+  * Update to ClamAV-0.95
+  * Detailed README.rdoc
+  + ClamAV.new optional parameters options, db_options
+  + ClamAV#scanfile optional parameter options
+  + ClamAV#reload - reload virus database
+  + ClamAV#setlimit, #getlimit, #setstring, #getstring
+
+Sat Sep 06 15:43:00 MSK 2008
 ----------------------------
   V 0.2.2
   * Update to ClamAV-0.94
