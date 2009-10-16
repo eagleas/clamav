@@ -26,8 +26,8 @@ static VALUE clamavr_new(argc, argv, klass)
     VALUE klass;
 {
     const char *v_fname;
-    int v_options;
-    int v_db_options;
+    VALUE v_options;
+    VALUE v_db_options;
     rb_scan_args(argc, argv, "02", &v_options, &v_db_options);
     if(NIL_P(v_options)){
       v_options = INT2FIX(CL_SCAN_STDOPT); /* default value */
@@ -151,7 +151,7 @@ static VALUE clamavr_scanfile(argc, argv, klass)
     Data_Get_Struct(klass, struct ClamAV_R, ptr);
 
     const char *v_fname;
-    int v_options;
+    VALUE v_options;
     rb_scan_args(argc, argv, "11", &v_fname, &v_options);
     if(NIL_P(v_options)){
       v_options = ptr->options; /* stored value */
@@ -187,7 +187,7 @@ static VALUE clamavr_dbreload(VALUE self) {
         }
         cl_statfree(&ptr->dbstat);
         cl_statinidir(dbdir, &ptr->dbstat);
-	  }
+    }
     return INT2FIX(state);
 }
 
