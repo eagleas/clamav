@@ -5,8 +5,6 @@ require 'rake/gempackagetask'
 require 'tools/rakehelp'
 require 'spec/rake/spectask'
 
-GEM_VERSION="0.3.0"
-
 setup_extension('clamav', 'clamav')
 
 desc "Compile native extension"
@@ -20,42 +18,30 @@ Spec::Rake::SpecTask.new do |task|
   task.verbose = true
 end
 
-gemspec = Gem::Specification.new do |gemspec|
-  gemspec.name = "clamav"
-  gemspec.version = GEM_VERSION
-  gemspec.author = "Alexander Oryol"
-  gemspec.email =  "eagle.alex@gmail.com"
-  gemspec.summary = "ClamAV Ruby bindings"
-  gemspec.homepage = "http://github.com/eagleas/clamav"
-  gemspec.rubyforge_project = 'clamav'
-  gemspec.description = <<-EOF
-    ClamAV Ruby bindings.
-  EOF
-  gemspec.files = %w( rakefile README.rdoc ChangeLog ) +
-                  Dir.glob( 'lib/*.rb' ) +
-                  Dir.glob( 'spec/*.rb' ) +
-                  Dir.glob( 'spec/unit/*.rb' ) +
-                  Dir.glob( 'spec/clamav-testfiles/*' ) +
-                  Dir.glob( 'ext/**/*.{c,rb,h}' ) +
-		  Dir.glob( 'tools/*.rb' )
-  gemspec.require_path = 'lib'
-  gemspec.has_rdoc = 'false'
-#  gemspec.add_dependency('builder')
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "clamav"
+    gemspec.author = "Alexander Oryol"
+    gemspec.email =  "eagle.alex@gmail.com"
+    gemspec.summary = "ClamAV Ruby bindings"
+    gemspec.homepage = "http://github.com/eagleas/clamav"
+    gemspec.rubyforge_project = 'clamav'
+    gemspec.description = "ClamAV Ruby bindings"
+    gemspec.require_path = 'lib'
 
-  if RUBY_PLATFORM.match("win32")
-    gemspec.platform = Gem::Platform::WIN32
-    gemspec.files += []
-  else
-    gemspec.platform = Gem::Platform::RUBY
-    gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
+    if RUBY_PLATFORM.match("win32")
+      gemspec.platform = Gem::Platform::WIN32
+    else
+      gemspec.platform = Gem::Platform::RUBY
+      gemspec.extensions = Dir.glob( 'ext/**/extconf.rb' )
+    end
   end
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
 
 task :package => [:clean, :compile, :spec]
-Rake::GemPackageTask.new( gemspec ) do |task|
-  task.gem_spec = gemspec
-  task.need_tar = true
-end
 
 setup_clean ["ext/clamav/*.{so,o}", "ext/clamav/Makefile", "lib/clamav.so", "pkg", "*.gem"]
 
