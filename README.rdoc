@@ -8,7 +8,7 @@ $ sudo gem install clamav
 
 == REQUIREMENTS:
 
-clamav >= 0.95, libclamav6, libclamav-dev
+clamav >= 0.95.3, libclamav6, libclamav-dev
 
 == SYNOPSIS:
 

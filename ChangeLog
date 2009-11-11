@@ -1,5 +1,12 @@
 ChangeLog
 
+Wed Nov 11 20:33:00 MSK 2009
+----------------------------
+  V 0.3.1
+  * Fix to work on 64-bit systems
+  * Update to ClamAV-0.95.3
+  * Using Jeweler
+
 Tue Apr 07 20:57:00 MSK 2009
 ----------------------------
   V 0.3.0
