@@ -44,6 +44,7 @@
     rb_define_const(cClamAV, "CL_DB_PUA_INCLUDE", INT2FIX(CL_DB_PUA_INCLUDE));
     rb_define_const(cClamAV, "CL_DB_PUA_EXCLUDE", INT2FIX(CL_DB_PUA_EXCLUDE));
     rb_define_const(cClamAV, "CL_DB_COMPILED", INT2FIX(CL_DB_COMPILED)); /*  internal  */
+    rb_define_const(cClamAV, "CL_DB_DIRECTORY", INT2FIX(CL_DB_DIRECTORY)); /*  internal  */
 
     /* recommended db settings */
     rb_define_const(cClamAV, "CL_DB_STDOPT", INT2FIX(CL_DB_STDOPT));
@@ -75,19 +76,19 @@
 
     rb_define_const(cClamAV, "CL_INIT_DEFAULT", INT2FIX(CL_INIT_DEFAULT));
 
-    rb_define_const(cClamAV, "CL_ENGINE_MAX_SCANSIZE", INT2FIX(CL_ENGINE_MAX_SCANSIZE));
-    rb_define_const(cClamAV, "CL_ENGINE_MAX_FILESIZE", INT2FIX(CL_ENGINE_MAX_FILESIZE));
-    rb_define_const(cClamAV, "CL_ENGINE_MAX_RECURSION", INT2FIX(CL_ENGINE_MAX_RECURSION));
-    rb_define_const(cClamAV, "CL_ENGINE_MAX_FILES", INT2FIX(CL_ENGINE_MAX_FILES));
-    rb_define_const(cClamAV, "CL_ENGINE_MIN_CC_COUNT", INT2FIX(CL_ENGINE_MIN_CC_COUNT));
-    rb_define_const(cClamAV, "CL_ENGINE_MIN_SSN_COUNT", INT2FIX(CL_ENGINE_MIN_SSN_COUNT));
-    rb_define_const(cClamAV, "CL_ENGINE_PUA_CATEGORIES", INT2FIX(CL_ENGINE_PUA_CATEGORIES));
-    rb_define_const(cClamAV, "CL_ENGINE_DB_OPTIONS", INT2FIX(CL_ENGINE_DB_OPTIONS));
-    rb_define_const(cClamAV, "CL_ENGINE_DB_VERSION", INT2FIX(CL_ENGINE_DB_VERSION));
-    rb_define_const(cClamAV, "CL_ENGINE_DB_TIME", INT2FIX(CL_ENGINE_DB_TIME));
-    rb_define_const(cClamAV, "CL_ENGINE_AC_ONLY", INT2FIX(CL_ENGINE_AC_ONLY));
-    rb_define_const(cClamAV, "CL_ENGINE_AC_MINDEPTH", INT2FIX(CL_ENGINE_AC_MINDEPTH));
-    rb_define_const(cClamAV, "CL_ENGINE_AC_MAXDEPTH", INT2FIX(CL_ENGINE_AC_MAXDEPTH));
-    rb_define_const(cClamAV, "CL_ENGINE_TMPDIR", INT2FIX(CL_ENGINE_TMPDIR));
-    rb_define_const(cClamAV, "CL_ENGINE_KEEPTMP", INT2FIX(CL_ENGINE_KEEPTMP));
+    rb_define_const(cClamAV, "CL_ENGINE_MAX_SCANSIZE", INT2FIX(CL_ENGINE_MAX_SCANSIZE));        /*  uint64_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_MAX_FILESIZE", INT2FIX(CL_ENGINE_MAX_FILESIZE));        /*  uint64_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_MAX_RECURSION", INT2FIX(CL_ENGINE_MAX_RECURSION));      /*  uint32_t	 */
+    rb_define_const(cClamAV, "CL_ENGINE_MAX_FILES", INT2FIX(CL_ENGINE_MAX_FILES));              /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_MIN_CC_COUNT", INT2FIX(CL_ENGINE_MIN_CC_COUNT));        /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_MIN_SSN_COUNT", INT2FIX(CL_ENGINE_MIN_SSN_COUNT));      /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_PUA_CATEGORIES", INT2FIX(CL_ENGINE_PUA_CATEGORIES));    /*  (char *)  */
+    rb_define_const(cClamAV, "CL_ENGINE_DB_OPTIONS", INT2FIX(CL_ENGINE_DB_OPTIONS));            /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_DB_VERSION", INT2FIX(CL_ENGINE_DB_VERSION));            /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_DB_TIME", INT2FIX(CL_ENGINE_DB_TIME));                  /*  time_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_AC_ONLY", INT2FIX(CL_ENGINE_AC_ONLY));                  /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_AC_MINDEPTH", INT2FIX(CL_ENGINE_AC_MINDEPTH));          /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_AC_MAXDEPTH", INT2FIX(CL_ENGINE_AC_MAXDEPTH));          /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_TMPDIR", INT2FIX(CL_ENGINE_TMPDIR));                    /*  (char *)  */
+    rb_define_const(cClamAV, "CL_ENGINE_KEEPTMP", INT2FIX(CL_ENGINE_KEEPTMP));                  /*  uint32_t  */
 
