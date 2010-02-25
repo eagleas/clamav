@@ -113,7 +113,7 @@ static VALUE clamavr_setstring(VALUE self, VALUE v_param, VALUE v_value) {
     Data_Get_Struct(self, struct ClamAV_R, ptr);
 
     int ret;
-    ret = cl_engine_set_str(ptr->root, FIX2INT(v_param), RSTRING(v_value)->ptr);
+    ret = cl_engine_set_str(ptr->root, FIX2INT(v_param), RSTRING_PTR(v_value));
     if(ret != CL_SUCCESS) {
         rb_raise(rb_eRuntimeError, "cl_engine_set_str() error: %s\n", cl_strerror(ret));
     }
@@ -163,7 +163,7 @@ static VALUE clamavr_scanfile(argc, argv, klass)
     int ret;
     const char *virname;
 
-    ret = cl_scanfile(RSTRING(v_fname)->ptr, &virname, NULL, ptr->root, FIX2INT(v_options));
+    ret = cl_scanfile(RSTRING_PTR(v_fname), &virname, NULL, ptr->root, FIX2INT(v_options));
     if (ret == CL_VIRUS) {
         return rb_str_new2(virname);
     } else {
