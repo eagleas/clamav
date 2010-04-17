@@ -33,18 +33,26 @@
     rb_define_const(cClamAV, "CL_EMAXSIZE", INT2FIX(CL_EMAXSIZE));
     rb_define_const(cClamAV, "CL_EMAXFILES", INT2FIX(CL_EMAXFILES));
     rb_define_const(cClamAV, "CL_EFORMAT", INT2FIX(CL_EFORMAT));
+#ifdef CL_EBYTECODE
+    rb_define_const(cClamAV, "CL_EBYTECODE", INT2FIX(CL_EBYTECODE));
+#endif
 
     /* db options */
     rb_define_const(cClamAV, "CL_DB_PHISHING", INT2FIX(CL_DB_PHISHING));
     rb_define_const(cClamAV, "CL_DB_PHISHING_URLS", INT2FIX(CL_DB_PHISHING_URLS));
     rb_define_const(cClamAV, "CL_DB_PUA", INT2FIX(CL_DB_PUA));
-    rb_define_const(cClamAV, "CL_DB_CVDNOTMP", INT2FIX(CL_DB_CVDNOTMP));
+    rb_define_const(cClamAV, "CL_DB_CVDNOTMP", INT2FIX(CL_DB_CVDNOTMP)); /*  obsolete  */
     rb_define_const(cClamAV, "CL_DB_OFFICIAL", INT2FIX(CL_DB_OFFICIAL)); /*  internal  */
     rb_define_const(cClamAV, "CL_DB_PUA_MODE", INT2FIX(CL_DB_PUA_MODE));
     rb_define_const(cClamAV, "CL_DB_PUA_INCLUDE", INT2FIX(CL_DB_PUA_INCLUDE));
     rb_define_const(cClamAV, "CL_DB_PUA_EXCLUDE", INT2FIX(CL_DB_PUA_EXCLUDE));
     rb_define_const(cClamAV, "CL_DB_COMPILED", INT2FIX(CL_DB_COMPILED)); /*  internal  */
     rb_define_const(cClamAV, "CL_DB_DIRECTORY", INT2FIX(CL_DB_DIRECTORY)); /*  internal  */
+#ifdef CL_DB_BYTECODE
+    rb_define_const(cClamAV, "CL_DB_OFFICIAL_ONLY", INT2FIX(CL_DB_OFFICIAL_ONLY));
+    rb_define_const(cClamAV, "CL_DB_BYTECODE", INT2FIX(CL_DB_BYTECODE));
+    rb_define_const(cClamAV, "CL_DB_SIGNED", INT2FIX(CL_DB_SIGNED)); /*  internal  */
+#endif
 
     /* recommended db settings */
     rb_define_const(cClamAV, "CL_DB_STDOPT", INT2FIX(CL_DB_STDOPT));
@@ -58,7 +66,7 @@
     rb_define_const(cClamAV, "CL_SCAN_HTML", INT2FIX(CL_SCAN_HTML));
     rb_define_const(cClamAV, "CL_SCAN_PE", INT2FIX(CL_SCAN_PE));
     rb_define_const(cClamAV, "CL_SCAN_BLOCKBROKEN", INT2FIX(CL_SCAN_BLOCKBROKEN));
-    rb_define_const(cClamAV, "CL_SCAN_MAILURL", INT2FIX(CL_SCAN_MAILURL));
+    rb_define_const(cClamAV, "CL_SCAN_MAILURL", INT2FIX(CL_SCAN_MAILURL)); /*  ignored  */
     rb_define_const(cClamAV, "CL_SCAN_BLOCKMAX", INT2FIX(CL_SCAN_BLOCKMAX)); /*  ignored  */
     rb_define_const(cClamAV, "CL_SCAN_ALGORITHMIC", INT2FIX(CL_SCAN_ALGORITHMIC));
     rb_define_const(cClamAV, "CL_SCAN_PHISHING_BLOCKSSL", INT2FIX(CL_SCAN_PHISHING_BLOCKSSL)); /*  ssl mismatches, not ssl by itself */
@@ -73,6 +81,13 @@
 
     /* recommended scan settings */
     rb_define_const(cClamAV, "CL_SCAN_STDOPT", INT2FIX(CL_SCAN_STDOPT));
+
+    /* cl_countsigs options */
+#ifdef CL_COUNTSIGS_OFFICIAL
+    rb_define_const(cClamAV, "CL_COUNTSIGS_OFFICIAL", INT2FIX(CL_COUNTSIGS_OFFICIAL));
+    rb_define_const(cClamAV, "CL_COUNTSIGS_UNOFFICIAL", INT2FIX(CL_COUNTSIGS_UNOFFICIAL));
+    rb_define_const(cClamAV, "CL_COUNTSIGS_ALL", INT2FIX(CL_COUNTSIGS_ALL));
+#endif
 
     rb_define_const(cClamAV, "CL_INIT_DEFAULT", INT2FIX(CL_INIT_DEFAULT));
 
@@ -91,4 +106,11 @@
     rb_define_const(cClamAV, "CL_ENGINE_AC_MAXDEPTH", INT2FIX(CL_ENGINE_AC_MAXDEPTH));          /*  uint32_t  */
     rb_define_const(cClamAV, "CL_ENGINE_TMPDIR", INT2FIX(CL_ENGINE_TMPDIR));                    /*  (char *)  */
     rb_define_const(cClamAV, "CL_ENGINE_KEEPTMP", INT2FIX(CL_ENGINE_KEEPTMP));                  /*  uint32_t  */
+#ifdef CL_DB_BYTECODE
+    rb_define_const(cClamAV, "CL_ENGINE_BYTECODE_SECURITY", INT2FIX(CL_ENGINE_BYTECODE_SECURITY)); /*  uint32_t  */
+    rb_define_const(cClamAV, "CL_ENGINE_BYTECODE_TIMEOUT", INT2FIX(CL_ENGINE_BYTECODE_TIMEOUT)); /*  uint32_t  */
 
+    rb_define_const(cClamAV, "CL_BYTECODE_TRUST_ALL", INT2FIX(CL_BYTECODE_TRUST_ALL));          /*  insecure, debug setting  */
+    rb_define_const(cClamAV, "CL_BYTECODE_TRUST_SIGNED", INT2FIX(CL_BYTECODE_TRUST_SIGNED));    /*  default  */
+    rb_define_const(cClamAV, "CL_BYTECODE_TRUST_NOTHING", INT2FIX(CL_BYTECODE_TRUST_NOTHING));  /*  paranoid setting  */
+#endif

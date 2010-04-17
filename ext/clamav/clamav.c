@@ -20,21 +20,12 @@ static void clamavr_free(struct ClamAV_R *ptr) {
     xfree(ptr);
 }
 
-static VALUE clamavr_new(argc, argv, klass)
-    int argc;
-    VALUE *argv;
-    VALUE klass;
-{
+static VALUE clamavr_new(VALUE klass) {
     const char *v_fname;
     VALUE v_options;
     VALUE v_db_options;
-    rb_scan_args(argc, argv, "02", &v_options, &v_db_options);
-    if(NIL_P(v_options)){
-      v_options = INT2FIX(CL_SCAN_STDOPT); /* default value */
-    }
-    if(NIL_P(v_db_options)){
-      v_db_options = INT2FIX(CL_DB_STDOPT); /* default value */
-    }
+    v_options = INT2FIX(CL_SCAN_STDOPT); /* default value */
+    v_db_options = INT2FIX(CL_DB_STDOPT); /* default value */
 
     int ret;
     ret = cl_init(FIX2INT(v_options));
@@ -142,11 +133,28 @@ static VALUE clamavr_signo(VALUE self) {
     return UINT2NUM(ptr->signo);
 }
 
-static VALUE clamavr_scanfile(argc, argv, klass)
-    int argc;
-    VALUE *argv;
-    VALUE klass;
-{
+#ifdef CL_COUNTSIGS_OFFICIAL
+static VALUE clamavr_countsigs(int argc, VALUE *argv, VALUE self) {
+    VALUE v_options;
+    rb_scan_args(argc, argv, "01", &v_options);
+    if(NIL_P(v_options)){
+      v_options = CL_COUNTSIGS_ALL; /* all signatures count */
+    }
+
+    const char *dbdir;
+    dbdir = cl_retdbdir();
+
+    int ret;
+    int signo = 0;
+    ret = cl_countsigs(dbdir, FIX2INT(v_options), &signo);
+    if(ret != CL_SUCCESS) {
+        rb_raise(rb_eRuntimeError, "cl_countsigs() error: %s\n", cl_strerror(ret));
+    }
+    return INT2NUM(signo);
+}
+#endif
+
+static VALUE clamavr_scanfile(int argc, VALUE *argv, VALUE klass) {
     struct ClamAV_R *ptr;
     Data_Get_Struct(klass, struct ClamAV_R, ptr);
 
@@ -177,6 +185,7 @@ static VALUE clamavr_dbreload(VALUE self) {
 
     int state;
     state = cl_statchkdir(&ptr->dbstat);
+
     if(state == 1) {
         const char *dbdir;
         dbdir = cl_retdbdir();
@@ -188,20 +197,35 @@ static VALUE clamavr_dbreload(VALUE self) {
         cl_statfree(&ptr->dbstat);
         cl_statinidir(dbdir, &ptr->dbstat);
     }
+
     return INT2FIX(state);
+}
+
+static VALUE clamavr_retver(VALUE self) {
+    const char *res;
+    res = cl_retver();
+    return rb_str_new2(res);
 }
 
 void Init_clamav() {
     cClamAV =  rb_define_class("ClamAV", rb_cObject);
-    rb_define_singleton_method(cClamAV, "new", clamavr_new, -1);
+
+    rb_require("singleton");
+    rb_include_module(cClamAV, rb_const_get(rb_cObject, rb_intern("Singleton")));
+    rb_funcall(rb_const_get(rb_cObject, rb_intern("Singleton")), rb_intern("included"), 1, cClamAV);
+
+    rb_define_singleton_method(cClamAV, "new", clamavr_new, 0);
     rb_define_method(cClamAV, "initialize", clamavr_initialize, 0);
     rb_define_method(cClamAV, "scanfile", clamavr_scanfile, -1);
     rb_define_method(cClamAV, "signo", clamavr_signo, 0);
+#ifdef CL_COUNTSIGS_OFFICIAL
+    rb_define_method(cClamAV, "countsigs", clamavr_countsigs, -1);
+#endif
     rb_define_method(cClamAV, "setlimit", clamavr_setlimit, 2);
     rb_define_method(cClamAV, "getlimit", clamavr_getlimit, 1);
     rb_define_method(cClamAV, "setstring", clamavr_setstring, 2);
     rb_define_method(cClamAV, "getstring", clamavr_getstring, 1);
     rb_define_method(cClamAV, "reload", clamavr_dbreload, 0);
-
+    rb_define_method(cClamAV, "version", clamavr_retver, 0);
 #include <const.h>
 }

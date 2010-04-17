@@ -12,10 +12,27 @@ clamav >= 0.95.3, libclamav6, libclamav-dev
 
 == SYNOPSIS:
 
-== ClamAV.new([options[, db_options]])
+ClamAV is singleton.
+
+== ClamAV.instance
 
   return:
     ClamAV instance
+
+DB options:
+
+* CL_DB_STDOPT (default) equal CL_DB_PHISHING | CL_DB_PHISHING_URLS | CL_DB_BYTECODE
+* CL_DB_PUA
+* CL_DB_CVDNOTMP
+* CL_DB_PUA_MODE
+* CL_DB_PUA_INCLUDE
+* CL_DB_PUA_EXCLUDE
+
+See ClamAV documentation and sources for details.
+
+
+== ClamAV#scanfile(filename[, options])
+  options default CL_SCAN_STDOPT
 
 Options:
 
@@ -32,25 +49,8 @@ Options:
 * CL_SCAN_PARTIAL_MESSAGE
 * CL_SCAN_HEURISTIC_PRECEDENCE
 
-DB options:
-
-* CL_DB_STDOPT (default) equal CL_DB_PHISHING | CL_DB_PHISHING_URLS
-* CL_DB_PUA
-* CL_DB_CVDNOTMP
-* CL_DB_PUA_MODE
-* CL_DB_PUA_INCLUDE
-* CL_DB_PUA_EXCLUDE
-
-See ClamAV documentation and sources for details.
-
-
-
-== ClamAV#scanfile(filename[, options])
-  options default CL_SCAN_STDOPT
-    
   return:
     virusname or ClamAV returncode(Fixnum)
-
 
 
 == ClamAV#reload()
@@ -59,7 +59,6 @@ See ClamAV documentation and sources for details.
   return:
     1 - reload successful
     0 - reload unnecessary
-
 
 
 == ClamAV#setlimit(param, value)
