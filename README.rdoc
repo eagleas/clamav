@@ -9,10 +9,13 @@ $ sudo gem install clamav
 == REQUIREMENTS:
 
 clamav >= 0.95.3, libclamav6, libclamav-dev
+clamav >= 0.96 is recommended
 
 == SYNOPSIS:
 
-ClamAV is a singleton.
+  *Changes*: Now ClamAV is a singleton. Use ClamAV.instance instead ClamAV.new.
+  You should call ClamAV#loaddb([options]) after first call ClamAV.instance.
+  Next run ClamAV#loaddb with another options will recreate/recompile clamav engine/database.
 
 == ClamAV.instance
 
