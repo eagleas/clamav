@@ -6,6 +6,7 @@ class ClamAV
 
     before(:all) do
       @clam = ClamAV.instance
+      @clam.loaddb
     end
 
     FILES = {
@@ -88,7 +89,11 @@ class ClamAV
     context "with custom db options" do
 
       before(:all) do
-        @clam = ClamAV.new(CL_SCAN_STDOPT, CL_DB_STDOPT | CL_DB_PUA)
+        @clam.loaddb(CL_DB_STDOPT | CL_DB_PUA)
+      end
+
+      after(:all) do
+        @clam.loaddb
       end
 
       it "should detect PUA" do

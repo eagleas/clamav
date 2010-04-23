@@ -12,12 +12,14 @@ clamav >= 0.95.3, libclamav6, libclamav-dev
 
 == SYNOPSIS:
 
-ClamAV is singleton.
+ClamAV is a singleton.
 
 == ClamAV.instance
 
   return:
     ClamAV instance
+
+== ClamAV#loaddb([db_options])
 
 DB options:
 
@@ -40,7 +42,6 @@ Options:
 * CL_SCAN_RAW
 * CL_SCAN_BLOCKENCRYPTED
 * CL_SCAN_BLOCKBROKEN
-* CL_SCAN_MAILURL
 * CL_SCAN_PHISHING_BLOCKSSL
 * CL_SCAN_PHISHING_BLOCKCLOAK
 * CL_SCAN_STRUCTURED
@@ -54,7 +55,7 @@ Options:
 
 
 == ClamAV#reload()
-  reload virus db if changed
+  reload virus database if changed
 
   return:
     1 - reload successful
@@ -95,6 +96,17 @@ See ClamAV documentation and sources for details.
 == ClamaAV#signo()
   get loaded signatures count
 
+== ClamaAV#countsigs([options])
+  get loaded signatures count (since 0.96 engine version)
+
+Options:
+* CL_COUNTSIGS_ALL (default)
+* CL_COUNTSIGS_OFFICIAL
+* CL_COUNTSIGS_UNOFFICIAL
+
+
+== ClamaAV#version()
+  get Clamav engine version string
 
 
 == LICENSE:
