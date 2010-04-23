@@ -27,7 +27,8 @@ class ClamAV
 
     FILES_ENCRYPTED = {
       'clam-p.rar'    => 'Encrypted.RAR',  # encripted RAR
-      'clam-ph.rar'    => 'Encrypted.RAR', # encripted RAR with encrypted both file data and headers
+      'clam-ph.rar'   => 'Encrypted.RAR', # encripted RAR with encrypted both file data and headers
+      'clam-v3.rar'   => 'ClamAV-Test-File'
     }
 
     context "with default options" do
@@ -42,14 +43,7 @@ class ClamAV
 
       FILES.each do |file, result|
         it "should scan #{file} with result #{result.to_s}" do
-           @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file)).should == result
-        end
-      end
-
-      FILES_ENCRYPTED.each do |file, result|
-        it "should scan encrypted #{file} with result #{result.to_s}" do
-          @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file),
-            CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED).should == result
+          @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file)).should == result
         end
       end
 
@@ -74,9 +68,11 @@ class ClamAV
 
     context "scan with custom options" do
 
-      it "should scan encrypted file with detect" do
-        @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/",
-            'clam-v3.rar'), CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED).should == 'ClamAV-Test-File'
+      FILES_ENCRYPTED.each do |file, result|
+        it "should scan encrypted #{file} with result #{result.to_s}" do
+          @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file),
+            CL_SCAN_STDOPT | CL_SCAN_BLOCKENCRYPTED).should match(/#{result}$/)
+        end
       end
 
       it "should scan OLE2 file with not detect" do

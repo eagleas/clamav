@@ -207,6 +207,7 @@ static VALUE clamavr_scanfile(int argc, VALUE *argv, VALUE klass) {
     const char *v_fname;
     VALUE v_options;
     rb_scan_args(argc, argv, "11", &v_fname, &v_options);
+
     if(NIL_P(v_options)){
         v_options = ptr->options; /* stored value */
     }
