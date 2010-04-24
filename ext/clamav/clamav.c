@@ -13,9 +13,11 @@ struct ClamAV_R {
 
 static void clamavr_free(struct ClamAV_R *ptr) {
     int ret;
-    ret = cl_engine_free(ptr->root);
-    if(ret != CL_SUCCESS) {
-        rb_raise(rb_eRuntimeError, "cl_engine_free() error: %s\n", cl_strerror(ret));
+    if(ptr->root != NULL) {
+      ret = cl_engine_free(ptr->root);
+      if(ret != CL_SUCCESS) {
+          rb_raise(rb_eRuntimeError, "cl_engine_free() error: %s\n", cl_strerror(ret));
+      }
     }
     xfree(ptr);
 }
@@ -81,7 +83,7 @@ static VALUE clamavr_loaddb(int argc, VALUE *argv, VALUE self) {
     rb_scan_args(argc, argv, "01", &v_db_options);
 
     if(NIL_P(v_db_options)){
-      v_db_options = INT2FIX(CL_DB_STDOPT); /* default value */
+        v_db_options = INT2FIX(CL_DB_STDOPT); /* default value */
     }
 
     if(ptr->root != NULL) {
@@ -207,6 +209,10 @@ static VALUE clamavr_scanfile(int argc, VALUE *argv, VALUE klass) {
     const char *v_fname;
     VALUE v_options;
     rb_scan_args(argc, argv, "11", &v_fname, &v_options);
+
+    if(ptr->root == NULL) {
+        rb_raise(rb_eRuntimeError, "ClamAV error: you should call loaddb() before scanning\n");
+    }
 
     if(NIL_P(v_options)){
         v_options = ptr->options; /* stored value */
