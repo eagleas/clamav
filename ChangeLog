@@ -1,5 +1,10 @@
 ChangeLog
 
+Tue May 18 15:30:00 MSK 2010
+----------------------------
+  V 0.4.1
+  * Raise error when scanfile() before loaddb()
+
 Fri Apr 23 19:31:00 MSK 2010
 ----------------------------
   V 0.4.0

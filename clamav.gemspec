@@ -9,18 +9,20 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Oryol"]
-  s.date = %q{2010-04-24}
+  s.date = %q{2010-05-18}
   s.description = %q{ClamAV Ruby bindings}
   s.email = %q{eagle.alex@gmail.com}
   s.extensions = ["ext/clamav/extconf.rb"]
   s.extra_rdoc_files = [
     "ChangeLog",
-     "README.rdoc"
+     "README.rdoc",
+     "TODO"
   ]
   s.files = [
     ".gitignore",
      "ChangeLog",
      "README.rdoc",
+     "TODO",
      "VERSION",
      "clamav.gemspec",
      "ext/clamav/clamav.c",
@@ -52,7 +54,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{clamav}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{ClamAV Ruby bindings}
   s.test_files = [
     "spec/unit/clamav_spec.rb",
