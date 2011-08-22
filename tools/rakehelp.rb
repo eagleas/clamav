@@ -1,6 +1,6 @@
 def make(makedir)
   Dir.chdir(makedir) do
-    sh(PLATFORM =~ /win32/ ? 'nmake' : 'make')
+    sh(RUBY_PLATFORM =~ /win32/ ? 'nmake' : 'make')
   end
 end
 

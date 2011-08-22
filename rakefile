@@ -1,9 +1,11 @@
 require 'rubygems'
+require 'rubygems/package_task'
 require 'rake'
 require 'rake/clean'
-require 'rake/gempackagetask'
-require 'tools/rakehelp'
-require 'spec/rake/spectask'
+#require 'rake/gempackagetask'
+require './tools/rakehelp'
+#require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
 setup_extension('clamav', 'clamav')
 
@@ -12,10 +14,13 @@ task :compile => [:clamav]
 
 task :default => [:compile, :spec]
 
-Spec::Rake::SpecTask.new do |task|
-  task.libs << 'spec'
-  task.spec_files = Dir.glob( 'spec/**/*_spec.rb' )
-  task.verbose = true
+#Spec::Rake::SpecTask.new do |task|
+RSpec::Core::RakeTask.new(:core) do |spec|
+#  task.libs << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rspec_opts = ['--backtrace']
+#  spec.spec_files = Dir.glob( 'spec/**/*_spec.rb' )
+#  spec.verbose = true
 end
 
 begin
@@ -52,3 +57,4 @@ end
 task :uninstall do
   sh %{ sudo gem uninstall clamav }
 end
+
