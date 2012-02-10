@@ -33,7 +33,7 @@ class ClamAV
       'clam-v3.rar'   => 'ClamAV-Test-File'
     }
 
-    context "with default options" do
+    context "generic" do
 
       it "should be instance of Clamav" do
         @clam.should be_instance_of(ClamAV)
@@ -41,12 +41,6 @@ class ClamAV
 
       it "should return engine version" do
         @clam.version.should >= '0.97'
-      end
-
-      FILES.each do |file, result|
-        it "should scan #{file} with result #{result.to_s}" do
-          @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file)).should == result
-        end
       end
 
       it "should return signatures count" do
@@ -63,6 +57,16 @@ class ClamAV
 
       it "should not reload db when fresh" do
         @clam.reload.should == 0
+      end
+
+    end
+
+    context "scan with default options" do
+
+      FILES.each do |file, result|
+        it "should scan #{file} with result #{result.to_s}" do
+          @clam.scanfile(File.join(File.dirname(__FILE__), "../clamav-testfiles/", file)).should == result
+        end
       end
 
     end
