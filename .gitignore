@@ -1,6 +1,7 @@
 *.o
 *.so
 *.log
+Gemfile.lock
 nbproject
 pkg
 Makefile

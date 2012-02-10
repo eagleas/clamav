@@ -1,6 +1,6 @@
 def make(makedir)
   Dir.chdir(makedir) do
-    sh(PLATFORM =~ /win32/ ? 'nmake' : 'make')
+    sh(RUBY_PLATFORM =~ /win32/ ? 'nmake' : 'make')
   end
 end
 
@@ -36,7 +36,7 @@ end
 
 def setup_extension(dir, extension)
   ext = "ext/#{dir}"
-  ext_so = "#{ext}/#{extension}.#{Config::CONFIG['DLEXT']}"
+  ext_so = "#{ext}/#{extension}.#{RbConfig::CONFIG['DLEXT']}"
   ext_files = FileList[
     "#{ext}/*.cpp",
     "#{ext}/*.h",

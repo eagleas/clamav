@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 require File.dirname(__FILE__) + '/../spec_helper'
 
 class ClamAV
@@ -20,14 +22,14 @@ class ClamAV
       'clam-v2.rar'   => 'ClamAV-Test-File',
       'clam-v3.rar'   => 'ClamAV-Test-File',
       'clam-p.rar'    => CL_CLEAN,  # encripted RAR
-      'clam-ph.rar'    => CL_CLEAN, # encripted RAR with encrypted both file data and headers
+      'clam-ph.rar'   => CL_CLEAN, # encripted RAR with encrypted both file data and headers
       'program.doc'   => 'W97M.Class.EB',
       'Программа.doc' => 'W97M.Class.EB', # filename in UTF-8
     }
 
     FILES_ENCRYPTED = {
-      'clam-p.rar'    => 'Encrypted.RAR',  # encripted RAR
-      'clam-ph.rar'   => 'Encrypted.RAR', # encripted RAR with encrypted both file data and headers
+      'clam-p.rar'    => 'Heuristics.Encrypted.RAR',  # encripted RAR
+      'clam-ph.rar'   => 'Heuristics.Encrypted.RAR', # encripted RAR with encrypted both file data and headers
       'clam-v3.rar'   => 'ClamAV-Test-File'
     }
 
@@ -38,7 +40,7 @@ class ClamAV
       end
 
       it "should return engine version" do
-        @clam.version.should >= '0.95'
+        @clam.version.should >= '0.97'
       end
 
       FILES.each do |file, result|
@@ -48,14 +50,13 @@ class ClamAV
       end
 
       it "should return signatures count" do
-        # strange, why not 757156? bug?
-        @clam.signo.should >= 756450 # on 17/04/10
+        @clam.signo.should >= 1134843 # on 10/02/2012
       end
 
       if ClamAV.instance.version >= '0.96'
         it "should return all signatures count" do
-          (default = @clam.countsigs).should >= 757156 # on 17/04/10
-          (all = @clam.countsigs(CL_COUNTSIGS_ALL)).should >= 757156
+          (default = @clam.countsigs).should >= 1134843 # on 10/02/2012
+          (all = @clam.countsigs(CL_COUNTSIGS_ALL)).should >= 1134843
           default.should == all
         end
       end

@@ -13,6 +13,11 @@ Gem::Specification.new do |s|
   s.description = %q{ClamAV Ruby bindings}
   s.email = %q{eagle.alex@gmail.com}
   s.extensions = ["ext/clamav/extconf.rb"]
+
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'jeweler'
+
   s.extra_rdoc_files = [
     "ChangeLog",
      "README.rdoc",
