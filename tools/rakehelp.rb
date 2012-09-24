@@ -36,14 +36,14 @@ end
 
 def setup_extension(dir, extension)
   ext = "ext/#{dir}"
-  ext_so = "#{ext}/#{extension}.#{Config::CONFIG['DLEXT']}"
+  ext_so = "#{ext}/#{extension}.#{RbConfig::CONFIG['DLEXT']}"
   ext_files = FileList[
     "#{ext}/*.cpp",
     "#{ext}/*.h",
     "#{ext}/extconf.rb",
     "#{ext}/Makefile",
     "lib"
-  ] 
+  ]
 
   task "lib" do
     directory "lib"
@@ -76,7 +76,7 @@ def base_gem_spec(pkg_name, pkg_version)
     s.extra_rdoc_files = [ "README" ]
 
     s.files = %w(COPYING LICENSE README Rakefile) +
-      Dir.glob("{bin,doc/rdoc,test}/**/*") + 
+      Dir.glob("{bin,doc/rdoc,test}/**/*") +
       Dir.glob("ext/**/*.{h,cpp,rb,rl}") +
       Dir.glob("{examples,tools,lib}/**/*.rb")
 
@@ -107,7 +107,7 @@ end
 # Conditional require rcov/rcovtask if present
 begin
   require 'rcov/rcovtask'
-  
+
   Rcov::RcovTask.new do |t|
     t.test_files = FileList['test/test*.rb']
     t.rcov_opts << "-x /usr"

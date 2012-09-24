@@ -1,3 +1,5 @@
+.bundle
+bin
 *.o
 *.so
 *.log
